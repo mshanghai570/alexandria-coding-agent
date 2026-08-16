@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Alexandria:Coding Agent — Gear Fallback
 // @namespace    https://github.com/alexandria-coding-agent
-// @version      0.1.0
+// @version      0.1.1
 // @description  A local-first, draggable Alexandria coding chat for Gear Browser and compatible UserScript runtimes.
 // @author       Alexandria:Coding Agent contributors
 // @match        http://*/*

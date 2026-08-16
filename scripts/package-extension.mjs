@@ -1,4 +1,4 @@
-import { mkdir, rm } from "node:fs/promises";
+import { mkdir, readFile, rm } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import process from "node:process";
@@ -7,7 +7,8 @@ import { fileURLToPath } from "node:url";
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
 const distributionDirectory = path.join(projectRoot, "dist");
-const packagePath = path.join(distributionDirectory, "alexandria-coding-agent-v0.1.0.zip");
+const manifest = JSON.parse(await readFile(path.join(projectRoot, "manifest.json"), "utf8"));
+const packagePath = path.join(distributionDirectory, `alexandria-coding-agent-v${manifest.version}.zip`);
 
 function run(command, args) {
   return new Promise((resolve, reject) => {

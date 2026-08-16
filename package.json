@@ -1,6 +1,6 @@
 {
   "name": "alexandria-coding-agent",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Alexandria:Coding Agent — a Microsoft Edge Manifest V3 coding-agent extension.",
   "type": "module",

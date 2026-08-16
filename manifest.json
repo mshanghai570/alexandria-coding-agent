@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Alexandria:Coding Agent",
   "short_name": "Alexandria",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A privacy-conscious coding agent for GitHub, code editors, and developer workflows.",
   "action": {
     "default_title": "Open Alexandria:Coding Agent",
