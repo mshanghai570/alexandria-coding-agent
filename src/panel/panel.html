@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alexandria:Coding Agent</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <main class="panel-shell">
+      <header class="panel-header">
+        <div>
+          <p class="eyebrow">Coding agent</p>
+          <h1>Alexandria</h1>
+        </div>
+        <button id="open-options" class="icon-button" type="button" aria-label="Open settings" title="Open settings">Settings</button>
+      </header>
+
+      <section class="context-card" aria-labelledby="context-title">
+        <p id="context-title" class="section-label">Current context</p>
+        <p id="context-summary">No page context has been captured yet.</p>
+      </section>
+
+      <section class="conversation" aria-live="polite">
+        <article class="welcome-message">
+          <h2>Ready to help with code</h2>
+          <p>Ask Alexandria to inspect the current page, explain a selected block, draft a change, or prepare a GitHub workflow.</p>
+        </article>
+      </section>
+
+      <form id="agent-form" class="composer">
+        <label for="agent-prompt">Message Alexandria</label>
+        <textarea id="agent-prompt" name="agent-prompt" rows="4" placeholder="Explain this repository, refactor the selected code, or prepare a pull-request description…"></textarea>
+        <div class="composer-actions">
+          <span id="provider-status" class="provider-status">Checking provider configuration…</span>
+          <button type="submit" class="primary-button">Send</button>
+        </div>
+      </form>
+    </main>
+    <script type="module" src="panel.js"></script>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "Alexandria:Coding Agent",
+  "short_name": "Alexandria",
+  "version": "0.1.0",
+  "description": "A privacy-conscious coding agent for GitHub, code editors, and developer workflows.",
+  "action": {
+    "default_title": "Open Alexandria:Coding Agent",
+    "default_popup": "src/popup/popup.html"
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "src/panel/panel.html"
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "activeTab",
+    "alarms",
+    "contextMenus",
+    "sidePanel",
+    "scripting",
+    "storage"
+  ],
+  "optional_permissions": [
+    "clipboardRead",
+    "clipboardWrite",
+    "downloads",
+    "notifications",
+    "tabs",
+    "webNavigation"
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "commands": {
+    "open-agent": {
+      "suggested_key": {
+        "default": "Alt+Shift+A",
+        "mac": "MacCtrl+Shift+A"
+      },
+      "description": "Open Alexandria:Coding Agent for the current tab"
+    },
+    "capture-selection": {
+      "suggested_key": {
+        "default": "Alt+Shift+X",
+        "mac": "MacCtrl+Shift+X"
+      },
+      "description": "Send the current selection to Alexandria"
+    }
+  }
+}

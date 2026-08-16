@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alexandria:Coding Agent</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header>
+        <p class="eyebrow">Coding agent</p>
+        <h1>Alexandria</h1>
+      </header>
+      <p id="page-name" class="page-name">Checking active page…</p>
+      <section class="status-card" aria-live="polite">
+        <strong id="provider-name">Checking provider…</strong>
+        <span id="provider-detail">Your model settings stay local to this browser profile.</span>
+      </section>
+      <div class="actions">
+        <button id="open-panel" class="primary-button" type="button">Open coding agent</button>
+        <button id="grant-page-access" class="secondary-button" type="button">Enable on this site</button>
+        <button id="open-options" class="text-button" type="button">Provider and privacy settings</button>
+      </div>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

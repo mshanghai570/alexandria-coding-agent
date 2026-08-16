@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alexandria:Coding Agent Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header>
+        <p class="eyebrow">Alexandria:Coding Agent</p>
+        <h1>Settings</h1>
+        <p>Configure a compatible model provider and choose how Alexandria may interact with coding websites.</p>
+      </header>
+
+      <form id="settings-form">
+        <section class="settings-card" aria-labelledby="provider-heading">
+          <h2 id="provider-heading">Model provider</h2>
+          <p class="muted">Use any OpenAI-compatible API. Credentials remain in this browser profile and are never committed to the project.</p>
+          <label for="provider-base-url">Base URL</label>
+          <input id="provider-base-url" name="provider-base-url" type="url" inputmode="url" placeholder="https://api.openai.com/v1" required />
+          <label for="provider-api-key">API key</label>
+          <input id="provider-api-key" name="provider-api-key" type="password" autocomplete="off" placeholder="Required by most providers" />
+          <div class="field-row">
+            <div>
+              <label for="provider-model">Model</label>
+              <input id="provider-model" name="provider-model" type="text" list="discovered-models" placeholder="Select or enter a model name" />
+              <datalist id="discovered-models"></datalist>
+            </div>
+            <button id="discover-models" class="secondary-button" type="button">Discover models</button>
+          </div>
+          <p id="discovery-status" class="muted" role="status">Model discovery will call the configured provider only after you choose it.</p>
+        </section>
+
+        <section class="settings-card" aria-labelledby="privacy-heading">
+          <h2 id="privacy-heading">Privacy and permissions</h2>
+          <label class="checkbox-row"><input id="confirm-page-write" type="checkbox" /> Confirm before Alexandria changes an editable web-page field.</label>
+          <label class="checkbox-row"><input id="confirm-repository-action" type="checkbox" /> Confirm before repository actions such as creating a pull request or submitting an issue.</label>
+          <label class="checkbox-row"><input id="redact-secrets" type="checkbox" /> Scan copied page context for common secret patterns before it leaves the browser.</label>
+          <label class="checkbox-row"><input id="allow-page-context" type="checkbox" /> Allow context capture on sites you explicitly grant to Alexandria.</label>
+          <button id="grant-site-access" class="secondary-button" type="button">Manage site access</button>
+          <p id="permission-status" class="muted" role="status">Alexandria asks for site access only when you request a page-aware feature.</p>
+        </section>
+
+        <section class="settings-card" aria-labelledby="integrations-heading">
+          <h2 id="integrations-heading">Optional integrations</h2>
+          <label class="checkbox-row"><input id="puter-chat" type="checkbox" /> Enable Puter Chat as an optional provider integration.</label>
+          <p class="muted">This setting only exposes the integration path. Authentication and provider-specific behavior will require an explicit opt-in in a later setup step.</p>
+        </section>
+
+        <footer class="form-actions">
+          <span id="save-status" role="status"></span>
+          <button class="primary-button" type="submit">Save settings</button>
+        </footer>
+      </form>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

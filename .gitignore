@@ -1,0 +1,27 @@
+# Dependencies and generated build output
+node_modules/
+dist/
+*.zip
+
+# Local extension settings and development credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Logs and temporary files
+*.log
+.tmp/
+tmp/
+coverage/
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Browser extension packaging artifacts
+web-ext-artifacts/

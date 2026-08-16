@@ -1,0 +1,19 @@
+{
+  "name": "alexandria-coding-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Alexandria:Coding Agent — a Microsoft Edge Manifest V3 coding-agent extension.",
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-manifest.mjs",
+    "package": "node scripts/package-extension.mjs"
+  },
+  "keywords": [
+    "edge-extension",
+    "manifest-v3",
+    "coding-agent",
+    "github",
+    "openai-compatible"
+  ],
+  "license": "UNLICENSED"
+}
