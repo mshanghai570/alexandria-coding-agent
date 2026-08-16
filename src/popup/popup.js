@@ -4,6 +4,7 @@ const pageName = document.querySelector("#page-name");
 const providerName = document.querySelector("#provider-name");
 const providerDetail = document.querySelector("#provider-detail");
 const grantPageAccess = document.querySelector("#grant-page-access");
+const showLauncher = document.querySelector("#show-launcher");
 
 let activeTab;
 
@@ -15,6 +16,26 @@ function originPatternFor(urlString) {
 function applyAppearance(settings) {
   document.body.dataset.theme = settings.appearance.theme;
   document.body.classList.toggle("compact-mode", settings.appearance.compactMode);
+}
+
+async function activateLauncher() {
+  if (!activeTab?.id) {
+    return;
+  }
+  showLauncher.disabled = true;
+  showLauncher.textContent = "Showing icon…";
+  try {
+    const response = await chrome.runtime.sendMessage({ type: "alexandria:enable-launcher", tabId: activeTab.id });
+    if (!response?.ok) {
+      throw new Error(response?.error || "Unable to show the floating icon.");
+    }
+    showLauncher.textContent = response.persistentRegistration ? "Floating icon active" : "Icon active on this page";
+  } catch (error) {
+    showLauncher.textContent = "Retry floating icon";
+    providerDetail.textContent = error.message;
+  } finally {
+    showLauncher.disabled = false;
+  }
 }
 
 async function loadPopup() {
@@ -39,7 +60,8 @@ async function loadPopup() {
         if (alreadyGranted) {
           grantPageAccess.disabled = true;
           grantPageAccess.textContent = "Enabled for this site";
-          chrome.runtime.sendMessage({ type: "alexandria:enable-launcher", tabId: activeTab.id }).catch(() => {});
+          showLauncher.hidden = false;
+          activateLauncher();
         }
       }
     } catch {
@@ -68,6 +90,8 @@ document.querySelector("#open-panel").addEventListener("click", async () => {
   }
 });
 
+showLauncher.addEventListener("click", activateLauncher);
+
 grantPageAccess.addEventListener("click", async () => {
   if (!activeTab?.url) {
     return;
@@ -78,9 +102,10 @@ grantPageAccess.addEventListener("click", async () => {
     const granted = await chrome.permissions.request({ origins: [origin] });
     grantPageAccess.textContent = granted ? "Enabled for this site" : "Site access declined";
     if (granted) {
-      const launcherResponse = await chrome.runtime.sendMessage({ type: "alexandria:enable-launcher", tabId: activeTab.id });
       grantPageAccess.disabled = true;
-      grantPageAccess.textContent = launcherResponse?.ok ? "Enabled for this site" : "Site enabled; launcher opens after refresh";
+      grantPageAccess.textContent = "Enabled for this site";
+      showLauncher.hidden = false;
+      await activateLauncher();
     }
   } catch {
     grantPageAccess.textContent = "Unavailable on this page";

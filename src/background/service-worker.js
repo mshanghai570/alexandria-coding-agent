@@ -100,28 +100,45 @@ async function ensureLauncherForTab(tab) {
   }
 
   const id = launcherScriptId(origin);
+  let persistentRegistration = true;
   try {
     await chrome.scripting.unregisterContentScripts({ ids: [id] });
   } catch {
     // The script may not have been registered yet.
   }
-  await chrome.scripting.registerContentScripts([{
-    id,
-    matches: [origin],
-    js: [LAUNCHER_SCRIPT_FILE],
-    runAt: "document_idle",
-    allFrames: false,
-    persistAcrossSessions: true
-  }]);
-  await writeLauncherOrigins([...(await readLauncherOrigins()), origin]);
+  try {
+    await chrome.scripting.registerContentScripts([{
+      id,
+      matches: [origin],
+      js: [LAUNCHER_SCRIPT_FILE],
+      runAt: "document_idle",
+      allFrames: false,
+      persistAcrossSessions: true
+    }]);
+    await writeLauncherOrigins([...(await readLauncherOrigins()), origin]);
+  } catch (error) {
+    persistentRegistration = false;
+    console.warn("Unable to persist the Alexandria launcher for this origin.", error);
+  }
 
   try {
     await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: [LAUNCHER_SCRIPT_FILE] });
-  } catch {
-    // Registration ensures future navigations on this enabled origin receive the launcher.
+  } catch (error) {
+    return {
+      ok: false,
+      error: "Alexandria could not place the launcher on this page. Refresh the page, confirm that the site is enabled, and select ‘Show floating icon’ again.",
+      detail: error?.message || "Script injection failed."
+    };
   }
 
-  return { ok: true, origin };
+  return {
+    ok: true,
+    origin,
+    persistentRegistration,
+    summary: persistentRegistration
+      ? "The floating Alexandria icon is active on this page and will return on future visits."
+      : "The floating Alexandria icon is active on this page. Refresh it to show the icon again if your browser does not keep the site registration."
+  };
 }
 
 async function disableLauncherForOrigin(origin) {
