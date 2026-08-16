@@ -1,0 +1,72 @@
+name: Release Alexandria:Coding Agent
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate source
+        run: |
+          npm test
+          npm run validate
+          npm run package
+          node --check userscripts/alexandria-coding-agent.user.js
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --generate-notes \
+            dist/alexandria-coding-agent-v*.zip \
+            userscripts/alexandria-coding-agent.user.js
+
+  gear-crx:
+    if: ${{ secrets.GEAR_EXTENSION_PRIVATE_KEY != '' }}
+    needs: validate-and-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Chromium packager
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium
+
+      - name: Restore the Gear signing key
+        env:
+          GEAR_EXTENSION_PRIVATE_KEY: ${{ secrets.GEAR_EXTENSION_PRIVATE_KEY }}
+        run: |
+          printf '%s' "$GEAR_EXTENSION_PRIVATE_KEY" > "$RUNNER_TEMP/alexandria-gear.pem"
+          chmod 600 "$RUNNER_TEMP/alexandria-gear.pem"
+
+      - name: Create signed Gear package
+        env:
+          GEAR_EXTENSION_KEY: ${{ runner.temp }}/alexandria-gear.pem
+        run: npm run package:gear
+
+      - name: Attach Gear direct-install package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" dist/alexandria-coding-agent-gear-v*.crx --clobber

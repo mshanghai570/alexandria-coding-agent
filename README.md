@@ -71,8 +71,20 @@ npm run package
 
 `npm run validate` checks JSON syntax, Manifest V3 requirements, least-privilege host configuration, expected extension surfaces, and execution-layer module presence. `npm run package` reruns validation and writes a clean ZIP to `dist/`; it excludes the repository, dependencies, generated output, and conventional local credential files.
 
+## Gear Browser distribution
+
+Gear Browser supports Manifest V3 WebExtensions and UserScripts on iOS. Alexandria provides a direct-install Chromium package and a deliberately scoped UserScript fallback:
+
+```bash
+npm run package:gear
+```
+
+The Gear package is written to `dist/alexandria-coding-agent-gear-v<version>.crx`. Keep the locally generated `.gear-local-signing-key.pem` private and reuse it for every CRX update; it is excluded from Git on purpose. The fallback script, `userscripts/alexandria-coding-agent.user.js`, provides a draggable in-page chat with locally stored OpenAI-compatible provider settings, but is **read-only** and does not perform page edits or repository actions.
+
+See [Gear Browser Distribution Guide](docs/gear-browser-installation.md) for direct-install, UserScript, signing-key, GitHub release, stable-update, and compatibility-test instructions.
+
 ## Current boundaries and next work
 
 The completion, page-adapter, and approval-flow foundations are implemented. Dedicated repository mutations, local file-system operations, persistent agent jobs, streaming completion output, and the optional Puter provider adapter remain future work. Any future repository or external action should preserve the same explicit, user-visible approval model.
 
-For a detailed technical flow, see [Agent Execution and Settings Model](docs/agent-execution.md) and [Permission Design](docs/permissions.md).
+For a detailed technical flow, see [Agent Execution and Settings Model](docs/agent-execution.md), [Permission Design](docs/permissions.md), and the [Gear Browser Distribution Guide](docs/gear-browser-installation.md).

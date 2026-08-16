@@ -10,6 +10,8 @@ dist/
 *.pem
 *.key
 *.crt
+.gear-local-signing-key.pem
+*.crx
 
 # Logs and temporary files
 *.log

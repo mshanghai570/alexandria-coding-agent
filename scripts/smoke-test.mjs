@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { normaliseSettings } from "../src/shared/defaults.js";
 import { AGENT_TOOLS } from "../src/agent/tool-contract.js";
 import { ProviderError, createChatCompletion } from "../src/providers/openai-compatible.js";
@@ -17,6 +18,16 @@ assert.deepEqual(
   AGENT_TOOLS.map((tool) => tool.function.name),
   ["get_page_context", "list_editable_regions", "read_editable_region", "propose_page_edit"]
 );
+
+const [manifestText, userScript] = await Promise.all([
+  readFile(new URL("../manifest.json", import.meta.url), "utf8"),
+  readFile(new URL("../userscripts/alexandria-coding-agent.user.js", import.meta.url), "utf8")
+]);
+const manifest = JSON.parse(manifestText);
+assert.match(userScript, new RegExp(`@version\\s+${manifest.version.replaceAll(".", "\\.")}`));
+assert.match(userScript, /@grant\s+GM_getValue/);
+assert.match(userScript, /@grant\s+GM_setValue/);
+assert.match(userScript, /@grant\s+GM_xmlhttpRequest/);
 
 await assert.rejects(
   createChatCompletion({

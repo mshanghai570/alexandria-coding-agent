@@ -7,7 +7,8 @@
   "scripts": {
     "validate": "node scripts/validate-manifest.mjs",
     "test": "node scripts/smoke-test.mjs",
-    "package": "node scripts/package-extension.mjs"
+    "package": "node scripts/package-extension.mjs",
+    "package:gear": "node scripts/package-gear.mjs"
   },
   "keywords": [
     "edge-extension",

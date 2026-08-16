@@ -27,6 +27,24 @@ function run(command, args) {
   });
 }
 
+function listZipEntries(zipPath) {
+  return new Promise((resolve, reject) => {
+    const child = spawn("unzip", ["-Z1", zipPath], { cwd: projectRoot });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => { stdout += chunk; });
+    child.stderr.on("data", (chunk) => { stderr += chunk; });
+    child.once("error", reject);
+    child.once("close", (code) => {
+      if (code === 0) {
+        resolve(stdout.split("\n").filter(Boolean));
+      } else {
+        reject(new Error(`Unable to inspect ZIP archive: ${stderr || `unzip exited with code ${code}`}`));
+      }
+    });
+  });
+}
+
 await run("node", ["scripts/validate-manifest.mjs"]);
 await run("node", ["scripts/smoke-test.mjs"]);
 await mkdir(distributionDirectory, { recursive: true });
@@ -42,9 +60,18 @@ await run("zip", [
   ".git/*",
   ".env",
   ".env.*",
+  ".gear-local-signing-key.pem",
+  "*.pem",
+  "*.key",
   "*.zip",
   ".DS_Store",
   "Thumbs.db"
 ]);
+
+const archiveEntries = await listZipEntries(packagePath);
+const sensitiveEntries = archiveEntries.filter((entry) => /(^|\/)[^/]+\.(?:pem|key)$/i.test(entry));
+if (sensitiveEntries.length) {
+  throw new Error(`Refusing to distribute an archive containing sensitive key material: ${sensitiveEntries.join(", ")}`);
+}
 
 console.log(`Created ${packagePath}`);
