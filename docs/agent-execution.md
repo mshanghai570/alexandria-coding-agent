@@ -8,13 +8,14 @@ Alexandria:Coding Agent now has a local browser-extension execution path for **O
 |---|---|---|
 | Configuration | Settings center | The user selects an OpenAI-compatible provider profile, base URL, API key, model, output limit, and temperature. Provider profiles are stored locally in the browser profile. |
 | Provider authorization | Settings center | Before model discovery or a completion request, Alexandria requires a runtime grant for the configured provider origin. |
-| Conversation | Side panel | The user sends a prompt. The background worker resolves the current coding tab and calls the active provider’s `/chat/completions` endpoint. |
+| Conversation | Side panel or floating chat | The user sends a prompt. The background worker resolves the current coding tab and calls the active provider’s `/chat/completions` endpoint. |
+| Floating launcher | Site-enabled content script | When the user enables Alexandria on a website, a draggable icon is registered for that specific origin. Its local position is restored on future visits, and selecting it opens a compact in-page chat window. |
 | Tool loop | Agent orchestrator | The provider may request a bounded set of page tools. Alexandria limits the loop to four tool rounds and never exposes tool access beyond its local executor. |
 | Page inspection | Dynamic adapter | Alexandria injects a local adapter only after user action and site access. It detects common developer sites, lists editable fields, reads narrowly scoped context, and redacts common secret patterns. |
-| Edit review | Side panel | The model can only create an edit proposal. Alexandria shows the original inspected text, replacement, and rationale before the user explicitly selects **Approve and apply**. |
+| Edit review | Side panel or floating chat | The model can only create an edit proposal. Alexandria shows the original inspected text, replacement, and rationale before the user explicitly selects **Approve and apply**. |
 | Page write | Dynamic adapter | On approval, Alexandria verifies that the original field hash still matches, writes the replacement to that editable field, and emits input/change events. The user remains responsible for saving or submitting the website form. |
 
-> **Key distinction:** Alexandria can alter a browser field only after a direct user approval in the side panel. It does not automatically submit a GitHub pull request, issue, form, or any other external action.
+> **Key distinction:** Alexandria can alter a browser field only after a direct user approval in one of its chat surfaces. It does not automatically submit a GitHub pull request, issue, form, or any other external action.
 
 ## Available agent tools
 
@@ -38,7 +39,7 @@ The settings page is a single local-first configuration center with the followin
 | Provider | Multiple named OpenAI-compatible profiles, base URL, API key, model field, on-demand model discovery, and endpoint test. |
 | Agent | Temperature, response-token cap, selection-context preference, and tool-activity visibility. |
 | Privacy | Per-origin permission list with individual revocation, page-write confirmation, repository-action confirmation, secret redaction, and page-context access. |
-| Integrations | Git hosting context, developer-site adapter, page-editor, and future Puter Chat visibility preferences. |
+| Integrations | Git hosting context, developer-site adapter, page-editor, draggable floating launcher, and future Puter Chat visibility preferences. |
 | Appearance | Midnight Terminal, Cloud Paper, Ember Forge, and Synthwave Grid themes; compact spacing; code-font sizing. |
 | Data | Local-settings reset. Origin permissions remain separately revocable to prevent a reset from silently changing browser permission state. |
 
@@ -48,7 +49,7 @@ The initial Puter control is a preference gate only; it neither signs in nor per
 
 The default system instructions treat all page content as untrusted data and prohibit following page-embedded instructions that attempt to alter the agent’s role, reveal secrets, bypass approvals, or expand tool access. Common GitHub, GitLab, Slack, OpenAI-style, AWS-style, bearer-token, and PEM private-key patterns are redacted from adapter text before it is returned to the provider. This is a best-effort safeguard rather than a substitute for reviewing context before sending it.
 
-Runtime host permission declarations allow an extension to ask users for access to specific sites rather than relying on blanket site access from installation.[1]
+Runtime host permission declarations allow an extension to ask users for access to specific sites rather than relying on blanket site access from installation.[1] The floating launcher is registered only after such an origin-specific grant and can be disabled globally in settings or removed by revoking that site origin.
 
 ## Verification commands
 

@@ -33,6 +33,14 @@ async function loadPopup() {
       if (!/^https?:$/.test(pageUrl.protocol)) {
         grantPageAccess.disabled = true;
         grantPageAccess.textContent = "Unavailable on this page";
+      } else {
+        const origin = originPatternFor(activeTab.url);
+        const alreadyGranted = await chrome.permissions.contains({ origins: [origin] });
+        if (alreadyGranted) {
+          grantPageAccess.disabled = true;
+          grantPageAccess.textContent = "Enabled for this site";
+          chrome.runtime.sendMessage({ type: "alexandria:enable-launcher", tabId: activeTab.id }).catch(() => {});
+        }
       }
     } catch {
       pageName.textContent = activeTab.title || "Current page";
@@ -70,7 +78,9 @@ grantPageAccess.addEventListener("click", async () => {
     const granted = await chrome.permissions.request({ origins: [origin] });
     grantPageAccess.textContent = granted ? "Enabled for this site" : "Site access declined";
     if (granted) {
+      const launcherResponse = await chrome.runtime.sendMessage({ type: "alexandria:enable-launcher", tabId: activeTab.id });
       grantPageAccess.disabled = true;
+      grantPageAccess.textContent = launcherResponse?.ok ? "Enabled for this site" : "Site enabled; launcher opens after refresh";
     }
   } catch {
     grantPageAccess.textContent = "Unavailable on this page";

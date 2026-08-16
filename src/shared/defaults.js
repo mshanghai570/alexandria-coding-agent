@@ -56,6 +56,7 @@ export const DEFAULT_SETTINGS = Object.freeze({
   },
   features: {
     puterChat: false,
+    floatingLauncher: true,
     pageEditor: true,
     githubAssistant: true,
     developerSiteAdapters: true

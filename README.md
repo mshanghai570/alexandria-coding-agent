@@ -11,6 +11,7 @@
 | Page-aware tools | The agent can inspect a narrow page summary, list editable regions, read one editable region, and propose an edit. |
 | Approval-gated edits | The side panel presents original text, replacement, and rationale. The field changes only after **Approve and apply**; the user still submits or saves the web page manually. |
 | Developer-site detection | Recognizes GitHub, GitLab, Bitbucket, Tampermonkey, CodeSandbox, StackBlitz, Replit, and VS Code for the Web, with a generic editable-field fallback. |
+| Floating launcher | Shows a draggable Alexandria icon on sites the user explicitly enables. Its per-origin position is stored locally, and clicking it opens a compact in-page chat window. |
 | Privacy controls | Provides per-origin access, individual origin revocation, page-context controls, secret-pattern redaction, and confirmation defaults. |
 | Appearance | Includes Midnight Terminal, Cloud Paper, Ember Forge, and Synthwave Grid themes, plus compact spacing and configurable code-font size. |
 | Optional Puter setting | Exposes an opt-in visibility preference only. It does not yet authenticate with or send data to Puter. |
@@ -52,13 +53,14 @@ alexandria-coding-agent/
 4. Choose the `alexandria-coding-agent` project root.
 5. Open the extension’s **Details** view to review its baseline permissions and pin it if desired.
 6. Select the toolbar icon, open **Provider and privacy settings**, add an OpenAI-compatible profile, discover or select a model, then save.
-7. On a coding site, choose **Enable on this site** from the popup before asking Alexandria to inspect page context.
+7. On a coding site, choose **Enable on this site** from the popup. Alexandria immediately adds its draggable launcher to the active page and restores it on future visits to that enabled origin.
+8. Drag the launcher to a comfortable location. Select it to open the compact in-page chat; use the minimize control to collapse it again.
 
 ## Configuration center
 
 The settings page is organized around six areas: **Provider**, **Agent**, **Privacy**, **Integrations**, **Appearance**, and **Data**. Provider discovery requests the selected API origin before contacting its `/models` endpoint. The Privacy section lists all currently granted provider and website origins and lets users revoke them individually.
 
-Agent preferences control completion temperature, output length, active-selection behavior, and tool-activity visibility. Appearance preferences are applied after saving across the settings page, side panel, and popup.
+Agent preferences control completion temperature, output length, active-selection behavior, and tool-activity visibility. Appearance preferences are applied after saving across the settings page, side panel, popup, and floating launcher. The Integrations section includes a switch to disable the floating launcher entirely; this immediately removes it from open pages and unregisters it for future visits.
 
 ## Development commands
 

@@ -11,6 +11,7 @@ const migrated = normaliseSettings({
 assert.equal(migrated.appearance.theme, "midnight");
 assert.equal(migrated.agent.maxOutputTokens, 1200);
 assert.equal(migrated.privacy.confirmBeforePageWrite, true);
+assert.equal(migrated.features.floatingLauncher, true);
 assert.equal(migrated.providers[0].id, "legacy");
 assert.deepEqual(
   AGENT_TOOLS.map((tool) => tool.function.name),

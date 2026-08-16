@@ -71,7 +71,8 @@ const entrypoints = [
   "src/providers/openai-compatible.js",
   "src/agent/run-agent.js",
   "src/agent/page-tools.js",
-  "src/adapters/page-adapter.js"
+  "src/adapters/page-adapter.js",
+  "src/launcher/floating-launcher.js"
 ].filter(Boolean);
 
 for (const entrypoint of entrypoints) {

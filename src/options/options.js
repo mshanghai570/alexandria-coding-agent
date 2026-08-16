@@ -33,6 +33,7 @@ const controls = {
   githubAssistant: document.querySelector("#github-assistant"),
   developerAdapters: document.querySelector("#developer-adapters"),
   pageEditor: document.querySelector("#page-editor"),
+  floatingLauncher: document.querySelector("#floating-launcher"),
   puterChat: document.querySelector("#puter-chat"),
   compactMode: document.querySelector("#compact-mode"),
   codeFontSize: document.querySelector("#code-font-size"),
@@ -136,6 +137,7 @@ function populateGeneralForm() {
   controls.githubAssistant.checked = settings.features.githubAssistant;
   controls.developerAdapters.checked = settings.features.developerSiteAdapters;
   controls.pageEditor.checked = settings.features.pageEditor;
+  controls.floatingLauncher.checked = settings.features.floatingLauncher;
   controls.puterChat.checked = settings.features.puterChat;
   controls.compactMode.checked = settings.appearance.compactMode;
   controls.codeFontSize.value = settings.appearance.codeFontSize;
@@ -167,6 +169,7 @@ function captureGeneralForm() {
   };
   settings.features = {
     puterChat: controls.puterChat.checked,
+    floatingLauncher: controls.floatingLauncher.checked,
     pageEditor: controls.pageEditor.checked,
     githubAssistant: controls.githubAssistant.checked,
     developerSiteAdapters: controls.developerAdapters.checked
