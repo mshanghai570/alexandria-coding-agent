@@ -67,7 +67,11 @@ const entrypoints = [
   manifest.background?.service_worker,
   manifest.action?.default_popup,
   manifest.side_panel?.default_path,
-  manifest.options_ui?.page
+  manifest.options_ui?.page,
+  "src/providers/openai-compatible.js",
+  "src/agent/run-agent.js",
+  "src/agent/page-tools.js",
+  "src/adapters/page-adapter.js"
 ].filter(Boolean);
 
 for (const entrypoint of entrypoints) {
@@ -83,4 +87,4 @@ if (errors.length) {
 }
 
 console.log("Manifest validation passed.");
-console.log(`Validated ${entrypoints.length} manifest entrypoints from ${manifestPath}.`);
+console.log(`Validated ${entrypoints.length} extension entrypoints and execution modules from ${manifestPath}.`);

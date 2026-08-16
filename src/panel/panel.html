@@ -17,23 +17,29 @@
       </header>
 
       <section class="context-card" aria-labelledby="context-title">
-        <p id="context-title" class="section-label">Current context</p>
-        <p id="context-summary">No page context has been captured yet.</p>
+        <div class="context-heading">
+          <p id="context-title" class="section-label">Current context</p>
+          <button id="refresh-context" class="link-button" type="button">Refresh</button>
+        </div>
+        <p id="context-summary">Checking the active coding page…</p>
+        <p id="provider-status" class="provider-status">Checking provider configuration…</p>
       </section>
 
-      <section class="conversation" aria-live="polite">
-        <article class="welcome-message">
-          <h2>Ready to help with code</h2>
-          <p>Ask Alexandria to inspect the current page, explain a selected block, draft a change, or prepare a GitHub workflow.</p>
+      <section id="conversation" class="conversation" aria-live="polite" aria-label="Agent conversation">
+        <article class="message assistant-message welcome-message">
+          <p class="message-role">Alexandria</p>
+          <p>Ask Alexandria to inspect the current page, explain a selected block, draft a change, or prepare a GitHub workflow. Page changes are always proposed for your approval first.</p>
         </article>
       </section>
+
+      <section id="proposals" class="proposals" aria-label="Proposed page edits" hidden></section>
 
       <form id="agent-form" class="composer">
         <label for="agent-prompt">Message Alexandria</label>
         <textarea id="agent-prompt" name="agent-prompt" rows="4" placeholder="Explain this repository, refactor the selected code, or prepare a pull-request description…"></textarea>
         <div class="composer-actions">
-          <span id="provider-status" class="provider-status">Checking provider configuration…</span>
-          <button type="submit" class="primary-button">Send</button>
+          <span id="run-status" class="run-status" role="status"></span>
+          <button id="send-button" type="submit" class="primary-button">Send</button>
         </div>
       </form>
     </main>

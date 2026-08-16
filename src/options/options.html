@@ -6,52 +6,157 @@
     <title>Alexandria:Coding Agent Settings</title>
     <link rel="stylesheet" href="options.css" />
   </head>
-  <body>
+  <body data-theme="midnight">
     <main class="settings-shell">
-      <header>
-        <p class="eyebrow">Alexandria:Coding Agent</p>
-        <h1>Settings</h1>
-        <p>Configure a compatible model provider and choose how Alexandria may interact with coding websites.</p>
+      <header class="settings-header">
+        <div>
+          <p class="eyebrow">Alexandria:Coding Agent</p>
+          <h1>Configuration Center</h1>
+          <p>Configure providers, agent behavior, privacy boundaries, developer integrations, and the interface that suits your workflow.</p>
+        </div>
+        <a class="open-agent-link" href="../panel/panel.html" target="_blank" rel="noreferrer">Open agent</a>
       </header>
 
+      <nav class="settings-nav" aria-label="Settings sections">
+        <a href="#provider-settings">Provider</a>
+        <a href="#agent-settings">Agent</a>
+        <a href="#privacy-settings">Privacy</a>
+        <a href="#integration-settings">Integrations</a>
+        <a href="#appearance-settings">Appearance</a>
+        <a href="#data-settings">Data</a>
+      </nav>
+
       <form id="settings-form">
-        <section class="settings-card" aria-labelledby="provider-heading">
-          <h2 id="provider-heading">Model provider</h2>
-          <p class="muted">Use any OpenAI-compatible API. Credentials remain in this browser profile and are never committed to the project.</p>
-          <label for="provider-base-url">Base URL</label>
-          <input id="provider-base-url" name="provider-base-url" type="url" inputmode="url" placeholder="https://api.openai.com/v1" required />
-          <label for="provider-api-key">API key</label>
-          <input id="provider-api-key" name="provider-api-key" type="password" autocomplete="off" placeholder="Required by most providers" />
-          <div class="field-row">
+        <section id="provider-settings" class="settings-card" aria-labelledby="provider-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">01 — Provider</p>
+              <h2 id="provider-heading">Model provider profiles</h2>
+            </div>
+            <div class="inline-actions">
+              <button id="new-provider" class="secondary-button" type="button">Add profile</button>
+              <button id="remove-provider" class="danger-button" type="button">Remove profile</button>
+            </div>
+          </div>
+          <p class="muted">Alexandria supports OpenAI-compatible chat-completion APIs. Add several profiles and select the one you want the agent to use.</p>
+          <label for="active-provider">Active provider profile</label>
+          <select id="active-provider" name="active-provider"></select>
+          <div class="two-column">
+            <div>
+              <label for="provider-label">Profile name</label>
+              <input id="provider-label" name="provider-label" type="text" maxlength="80" placeholder="Work provider" required />
+            </div>
             <div>
               <label for="provider-model">Model</label>
               <input id="provider-model" name="provider-model" type="text" list="discovered-models" placeholder="Select or enter a model name" />
               <datalist id="discovered-models"></datalist>
             </div>
-            <button id="discover-models" class="secondary-button" type="button">Discover models</button>
           </div>
-          <p id="discovery-status" class="muted" role="status">Model discovery will call the configured provider only after you choose it.</p>
+          <label for="provider-base-url">OpenAI-compatible base URL</label>
+          <input id="provider-base-url" name="provider-base-url" type="url" inputmode="url" placeholder="https://api.openai.com/v1" required />
+          <label for="provider-api-key">API key</label>
+          <input id="provider-api-key" name="provider-api-key" type="password" autocomplete="off" placeholder="Optional for local providers" />
+          <div class="inline-actions">
+            <button id="discover-models" class="secondary-button" type="button">Discover models</button>
+            <button id="test-provider" class="secondary-button" type="button">Test configuration</button>
+          </div>
+          <p id="discovery-status" class="muted" role="status">Model discovery requests access to this provider origin before calling its OpenAI-compatible model endpoint.</p>
         </section>
 
-        <section class="settings-card" aria-labelledby="privacy-heading">
-          <h2 id="privacy-heading">Privacy and permissions</h2>
-          <label class="checkbox-row"><input id="confirm-page-write" type="checkbox" /> Confirm before Alexandria changes an editable web-page field.</label>
-          <label class="checkbox-row"><input id="confirm-repository-action" type="checkbox" /> Confirm before repository actions such as creating a pull request or submitting an issue.</label>
-          <label class="checkbox-row"><input id="redact-secrets" type="checkbox" /> Scan copied page context for common secret patterns before it leaves the browser.</label>
-          <label class="checkbox-row"><input id="allow-page-context" type="checkbox" /> Allow context capture on sites you explicitly grant to Alexandria.</label>
-          <button id="grant-site-access" class="secondary-button" type="button">Manage site access</button>
-          <p id="permission-status" class="muted" role="status">Alexandria asks for site access only when you request a page-aware feature.</p>
+        <section id="agent-settings" class="settings-card" aria-labelledby="agent-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">02 — Agent</p>
+              <h2 id="agent-heading">Execution behavior</h2>
+            </div>
+          </div>
+          <p class="muted">These preferences control Alexandria’s local request settings and the amount of workflow detail shown in the side panel.</p>
+          <div class="two-column">
+            <div class="range-field">
+              <label for="agent-temperature">Creativity <output id="temperature-output" for="agent-temperature">0.2</output></label>
+              <input id="agent-temperature" type="range" min="0" max="1" step="0.1" />
+              <p class="muted">Lower values favor deterministic code analysis.</p>
+            </div>
+            <div>
+              <label for="max-output-tokens">Maximum response tokens</label>
+              <input id="max-output-tokens" type="number" min="256" max="8000" step="128" />
+              <p class="muted">A local guardrail for each provider response.</p>
+            </div>
+          </div>
+          <label class="checkbox-row"><input id="include-selection" type="checkbox" /> Include an active text selection as context by default.</label>
+          <label class="checkbox-row"><input id="show-tool-activity" type="checkbox" /> Show page-inspection activity in the conversation.</label>
         </section>
 
-        <section class="settings-card" aria-labelledby="integrations-heading">
-          <h2 id="integrations-heading">Optional integrations</h2>
-          <label class="checkbox-row"><input id="puter-chat" type="checkbox" /> Enable Puter Chat as an optional provider integration.</label>
-          <p class="muted">This setting only exposes the integration path. Authentication and provider-specific behavior will require an explicit opt-in in a later setup step.</p>
+        <section id="privacy-settings" class="settings-card" aria-labelledby="privacy-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">03 — Privacy</p>
+              <h2 id="privacy-heading">Permissions and safeguards</h2>
+            </div>
+          </div>
+          <p class="muted">Provider and site access are granted per origin. Alexandria does not receive blanket website access at installation.</p>
+          <label class="checkbox-row"><input id="confirm-page-write" type="checkbox" /> Require explicit approval before Alexandria changes an editable web-page field.</label>
+          <label class="checkbox-row"><input id="confirm-repository-action" type="checkbox" /> Require explicit approval before future repository actions such as creating a pull request or issue.</label>
+          <label class="checkbox-row"><input id="redact-secrets" type="checkbox" /> Redact common token and private-key patterns from page context before it leaves the browser.</label>
+          <label class="checkbox-row"><input id="allow-page-context" type="checkbox" /> Allow page-context capture on sites that I explicitly grant to Alexandria.</label>
+          <div class="permission-heading">
+            <h3>Granted origins</h3>
+            <button id="refresh-permissions" class="secondary-button" type="button">Refresh list</button>
+          </div>
+          <ul id="permission-list" class="permission-list"><li class="muted">Checking granted origins…</li></ul>
+        </section>
+
+        <section id="integration-settings" class="settings-card" aria-labelledby="integration-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">04 — Integrations</p>
+              <h2 id="integration-heading">Developer workflow adapters</h2>
+            </div>
+          </div>
+          <p class="muted">Site adapters are injected only after you invoke Alexandria on a page and grant that site access. They read the smallest available context and never submit a repository action automatically.</p>
+          <label class="checkbox-row"><input id="github-assistant" type="checkbox" /> Enable repository-aware context for GitHub, GitLab, and Bitbucket pages.</label>
+          <label class="checkbox-row"><input id="developer-adapters" type="checkbox" /> Enable browser-editor adapters for Tampermonkey, VS Code for the Web, CodeSandbox, StackBlitz, Replit, and compatible editors.</label>
+          <label class="checkbox-row"><input id="page-editor" type="checkbox" /> Enable approval-gated proposals for editable browser fields.</label>
+          <label class="checkbox-row"><input id="puter-chat" type="checkbox" /> Show the optional Puter Chat integration when its provider adapter is available.</label>
+          <p class="muted">Puter Chat remains opt-in. Enabling this preference does not sign in, transmit data, or select Puter as the active provider.</p>
+        </section>
+
+        <section id="appearance-settings" class="settings-card" aria-labelledby="appearance-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">05 — Appearance</p>
+              <h2 id="appearance-heading">Workspace appearance</h2>
+            </div>
+          </div>
+          <p class="muted">Theme changes preview immediately and are applied to the settings page, side panel, and popup after saving.</p>
+          <fieldset class="theme-fieldset">
+            <legend>Theme</legend>
+            <div id="theme-grid" class="theme-grid"></div>
+          </fieldset>
+          <div class="two-column">
+            <label class="checkbox-row"><input id="compact-mode" type="checkbox" /> Use compact message spacing.</label>
+            <div class="range-field">
+              <label for="code-font-size">Code font size <output id="font-size-output" for="code-font-size">13 px</output></label>
+              <input id="code-font-size" type="range" min="11" max="18" step="1" />
+            </div>
+          </div>
+        </section>
+
+        <section id="data-settings" class="settings-card" aria-labelledby="data-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">06 — Data</p>
+              <h2 id="data-heading">Local extension data</h2>
+            </div>
+          </div>
+          <p class="muted">Configuration and in-session page-edit proposals are kept in this browser profile. Resetting settings does not revoke website permissions; revoke those individually from the privacy section.</p>
+          <button id="reset-settings" class="danger-button" type="button">Reset local settings</button>
+          <p id="data-status" class="muted" role="status"></p>
         </section>
 
         <footer class="form-actions">
           <span id="save-status" role="status"></span>
-          <button class="primary-button" type="submit">Save settings</button>
+          <button class="primary-button" type="submit">Save configuration</button>
         </footer>
       </form>
     </main>

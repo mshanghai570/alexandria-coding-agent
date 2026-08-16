@@ -28,6 +28,7 @@ function run(command, args) {
 }
 
 await run("node", ["scripts/validate-manifest.mjs"]);
+await run("node", ["scripts/smoke-test.mjs"]);
 await mkdir(distributionDirectory, { recursive: true });
 await rm(packagePath, { force: true });
 
