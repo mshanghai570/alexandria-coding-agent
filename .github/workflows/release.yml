@@ -27,14 +27,20 @@ jobs:
           npm run package
           node --check userscripts/alexandria-coding-agent.user.js
 
-      - name: Create GitHub release
+      - name: Create or update GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" \
-            --generate-notes \
-            dist/alexandria-coding-agent-v*.zip \
-            userscripts/alexandria-coding-agent.user.js
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" --clobber \
+              dist/alexandria-coding-agent-v*.zip \
+              userscripts/alexandria-coding-agent.user.js
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              --generate-notes \
+              dist/alexandria-coding-agent-v*.zip \
+              userscripts/alexandria-coding-agent.user.js
+          fi
 
   gear-crx:
     if: ${{ secrets.GEAR_EXTENSION_PRIVATE_KEY != '' }}
